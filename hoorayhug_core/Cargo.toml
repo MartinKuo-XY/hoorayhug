@@ -12,8 +12,8 @@ license = "MIT"
 
 [dependencies]
 # hoorayhug
-hoorayhug_io = { version = "0.5" }
-hoorayhug_syscall = "0.1"
+hoorayhug_io = { path = "../hoorayhug_io" }
+hoorayhug_syscall = { path = "../hoorayhug_syscall" }
 hoorayhug_hook = { path = "../hoorayhug_hook", optional = true }
 hoorayhug_lb = { path = "../hoorayhug_lb", optional = true }
 kaminari = { version = "0.14", features = ["ws", "tls", "mix"], optional = true }
