@@ -15,8 +15,7 @@ jobs:
         'ubuntu-22.04'
       }}
     env:
-      # 强行覆盖工具链，防止本地文件劫持
-      RUSTUP_TOOLCHAIN: stable 
+      RUSTUP_TOOLCHAIN: nightly-2025-08-01
     strategy:
       matrix:
         target:
@@ -29,7 +28,7 @@ jobs:
           - x86_64-pc-windows-msvc
           - x86_64-apple-darwin
     steps:
-      - uses: actions/checkout@v6 # 已修复为正确的 v4
+      - uses: actions/checkout@v4
       - name: install toolchain
         uses: ./.github/actions/toolchain
         with:
