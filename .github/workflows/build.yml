@@ -16,8 +16,8 @@ jobs:
         'ubuntu-22.04'
       }}
     env:
-      # 强行环境变量覆盖，无视项目中任何隐藏的 rust-toolchain.toml 劫持
-      RUSTUP_TOOLCHAIN: stable 
+      # 强行锁定到你最初指定的 2025 年 8 月的 nightly 版本，防止拉取 2026 的新版
+      RUSTUP_TOOLCHAIN: nightly-2025-08-01
     strategy:
       matrix:
         target:
@@ -54,7 +54,7 @@ jobs:
           - aarch64-apple-darwin
           - aarch64-apple-ios
     steps:
-      - uses: actions/checkout@v6 # 已修复为正确的 v4
+      - uses: actions/checkout@v4
       - run: mkdir -p out/${{ matrix.target }}
       # cross
       - name: build cross
@@ -89,12 +89,12 @@ jobs:
           outdir: out/${{ matrix.target }}
       # finalize
       - name: upload binary
-        uses: actions/upload-artifact@v6 # 已修复为正确的 v4
+        uses: actions/upload-artifact@v4
         with:
           name: hoorayhug-${{ matrix.target }}
           path: out/${{ matrix.target }}/hoorayhug
       - name: upload binary (slim)
-        uses: actions/upload-artifact@v6 # 已修复为正确的 v4
+        uses: actions/upload-artifact@v4
         with:
           name: hoorayhug-slim-${{ matrix.target }}
           path: out/${{ matrix.target }}/hoorayhug-slim
