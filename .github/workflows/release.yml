@@ -1,0 +1,66 @@
+name: release
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+jobs:
+  release:
+    runs-on: >-
+      ${{  
+        contains(matrix.target, 'apple') && 'macos-latest' ||
+        contains(matrix.target, 'windows') && 'windows-latest' ||
+        'ubuntu-22.04'
+      }}
+    strategy:
+      matrix:
+        target:
+          # cross
+          - x86_64-unknown-linux-gnu
+          - x86_64-unknown-linux-musl
+   
+    steps:
+      - uses: actions/checkout@v6
+      - run: mkdir -p out/${{ matrix.target }}
+      # cross
+      - name: build cross
+        if: |
+          !contains(matrix.target, 'mips') &&
+          !contains(matrix.target, 'apple') &&
+          !contains(matrix.target, 'windows')
+        uses: ./.github/actions/build/cross
+        with:
+          target: ${{ matrix.target }}
+          outdir: out/${{ matrix.target }}
+      # mips
+      - name: build mips
+        if: contains(matrix.target, 'mips')
+        uses: ./.github/actions/build/mips
+        with:
+          target: ${{ matrix.target }}
+          outdir: out/${{ matrix.target }}
+      # windows
+      - name: build windows
+        if: contains(matrix.target, 'windows')
+        uses: ./.github/actions/build/windows
+        with:
+          target: ${{ matrix.target }}
+          outdir: out/${{ matrix.target }}
+      # apple
+      - name: build apple
+        if: contains(matrix.target, 'apple')
+        uses: ./.github/actions/build/apple
+        with:
+          target: ${{ matrix.target }}
+          outdir: out/${{ matrix.target }}
+      # finalize
+      - name: gzip binaries
+        run: |
+          tar -C out/${{ matrix.target }} -zcf out/${{ matrix.target }}/hoorayhug-${{ matrix.target }}.tar.gz hoorayhug
+          tar -C out/${{ matrix.target }} -zcf out/${{ matrix.target }}/hoorayhug-slim-${{ matrix.target }}.tar.gz hoorayhug-slim
+      - name: release
+        uses: softprops/action-gh-release@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          files: out/${{ matrix.target }}/*.tar.gz
