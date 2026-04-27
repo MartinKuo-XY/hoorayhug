@@ -18,6 +18,7 @@ jobs:
     env:
       # 强行锁定到你最初指定的 2025 年 8 月的 nightly 版本，防止拉取 2026 的新版
       RUSTUP_TOOLCHAIN: nightly-2025-08-01
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
     strategy:
       matrix:
         target:
