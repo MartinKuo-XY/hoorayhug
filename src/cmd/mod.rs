@@ -1,8 +1,8 @@
 use clap::{Command, ArgMatches};
 
 use hoorayhug_core as _core;
-use _core::_io;
-use _core::_syscall;
+use _core::hoorayhug_io as _io;
+use _core::hoorayhug_syscall as _syscall;
 
 use crate::conf::CmdOverride;
 use crate::conf::EndpointConf;
