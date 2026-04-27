@@ -1,6 +1,6 @@
 [package]
 name = "hoorayhug"
-version = "1.6.8"
+version = "1.8.0"
 authors = ["MartinKuo.XY <martinkuo001@gmail.com>"]
 edition = "2021"
 
