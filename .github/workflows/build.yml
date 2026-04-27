@@ -54,7 +54,7 @@ jobs:
           - aarch64-apple-darwin
           - aarch64-apple-ios
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - run: mkdir -p out/${{ matrix.target }}
       # cross
       - name: build cross
