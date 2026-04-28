@@ -48,13 +48,13 @@ impl Default for DnsConf {
 static mut DNS_CONF: OnceCell<DnsConf> = OnceCell::new();
 
 static mut DNS: Lazy<TokioResolver> = Lazy::new(|| {
-    use resolver::net::runtime::TokioRuntimeProvider as Tokio;
+    use resolver::proto::runtime::TokioRuntimeProvider as Tokio;
+    use resolver::name_server::GenericConnector as Connect;
 
     let DnsConf { conf, opts } = unsafe { DNS_CONF.take().unwrap() };
-    TokioResolver::builder_with_config(conf, Tokio::default())
+    TokioResolver::builder_with_config(conf, Connect::new(Tokio::new()))
         .with_options(opts)
         .build()
-        .unwrap()
 });
 
 /// Force initialization.
