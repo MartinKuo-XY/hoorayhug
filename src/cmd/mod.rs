@@ -65,14 +65,16 @@ pub fn scan() -> CmdInput {
 fn handle_matches(matches: ArgMatches) -> CmdInput {
     #[cfg(unix)]
     if matches.get_flag("daemon") {
-        hoorayhug_syscall::daemonize("hoorayhug is running in the background");
+        // 修改为 _syscall
+        _syscall::daemonize("hoorayhug is running in the background");
     }
 
     #[cfg(all(unix, not(target_os = "android")))]
     {
-        use hoorayhug_syscall::get_nofile_limit;
-        use hoorayhug_syscall::set_nofile_limit;
-        use hoorayhug_syscall::bump_nofile_limit;
+        // 修改为 _syscall
+        use _syscall::get_nofile_limit;
+        use _syscall::set_nofile_limit;
+        use _syscall::bump_nofile_limit;
 
         // set
         if let Some(nofile) = matches.get_one::<String>("nofile") {
@@ -93,7 +95,8 @@ fn handle_matches(matches: ArgMatches) -> CmdInput {
 
     #[cfg(target_os = "linux")]
     {
-        use hoorayhug_io::set_pipe_size;
+        // 修改为 _io
+        use _io::set_pipe_size;
 
         if let Some(page) = matches.get_one::<String>("pipe_page") {
             if let Ok(page) = page.parse::<usize>() {
@@ -107,7 +110,8 @@ fn handle_matches(matches: ArgMatches) -> CmdInput {
 
     #[cfg(feature = "hook")]
     {
-        use hoorayhug_core::hook::pre_conn::load_dylib as load_pre_conn;
+        // 修改为 _core
+        use _core::hook::pre_conn::load_dylib as load_pre_conn;
         if let Some(path) = matches.get_one::<String>("pre_conn_hook") {
             load_pre_conn(path);
             println!("hook: {}", path);
