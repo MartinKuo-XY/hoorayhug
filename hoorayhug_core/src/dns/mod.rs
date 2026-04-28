@@ -22,7 +22,9 @@ use crate::endpoint::RemoteAddr;
 pub mod config {
     use super::resolver;
     pub use resolver::config::*;
+    pub use resolver::proto::xfer::Protocol; // <--- 加上这一行！
 }
+
 
 /// Dns config.
 #[derive(Debug, Clone)]
