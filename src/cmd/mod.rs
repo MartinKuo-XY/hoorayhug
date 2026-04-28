@@ -23,14 +23,14 @@ pub enum CmdInput {
 
 pub fn scan() -> CmdInput {
     let ver = format!("{} {}", VERSION, FEATURES);
-    let app = Command::new("HoorayHug").about("A high efficiency relay tool").version(ver);
+    let app = Command::new("hoorayhug").about("A high efficiency relay tool").version(ver);
 
     let app = app
         .disable_help_flag(true)
         .disable_help_subcommand(true)
         .disable_version_flag(true)
         .arg_required_else_help(true)
-        .override_usage(" [FLAGS] [OPTIONS]");
+        .override_usage("hoorayhug [FLAGS] [OPTIONS]");
 
     let app = flag::add_all(app);
     let app = sub::add_all(app);
@@ -65,14 +65,14 @@ pub fn scan() -> CmdInput {
 fn handle_matches(matches: ArgMatches) -> CmdInput {
     #[cfg(unix)]
     if matches.get_flag("daemon") {
-        _syscall::daemonize(" is running in the background");
+        hoorayhug_syscall::daemonize("hoorayhug is running in the background");
     }
 
     #[cfg(all(unix, not(target_os = "android")))]
     {
-        use _syscall::get_nofile_limit;
-        use _syscall::set_nofile_limit;
-        use _syscall::bump_nofile_limit;
+        use hoorayhug_syscall::get_nofile_limit;
+        use hoorayhug_syscall::set_nofile_limit;
+        use hoorayhug_syscall::bump_nofile_limit;
 
         // set
         if let Some(nofile) = matches.get_one::<String>("nofile") {
@@ -93,7 +93,7 @@ fn handle_matches(matches: ArgMatches) -> CmdInput {
 
     #[cfg(target_os = "linux")]
     {
-        use _io::set_pipe_size;
+        use hoorayhug_io::set_pipe_size;
 
         if let Some(page) = matches.get_one::<String>("pipe_page") {
             if let Ok(page) = page.parse::<usize>() {
@@ -107,7 +107,7 @@ fn handle_matches(matches: ArgMatches) -> CmdInput {
 
     #[cfg(feature = "hook")]
     {
-        use _core::hook::pre_conn::load_dylib as load_pre_conn;
+        use hoorayhug_core::hook::pre_conn::load_dylib as load_pre_conn;
         if let Some(path) = matches.get_one::<String>("pre_conn_hook") {
             load_pre_conn(path);
             println!("hook: {}", path);
